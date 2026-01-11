@@ -1,39 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { createRoot } from "react-dom/client";
 
-// 秒数を分:秒の形式に変換する関数
-function secondsToMs(d) {
-  const minutes = Math.floor(d / 60);
-  const seconds = Math.floor(d % 60);
-
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-}
-
 export default function App() {
-  const [time, setTime] = useState(0);
+  // 👇 useRefを使ってボタンが10回クリックされたらアラートを表示してみよう！
+  const clickCount = useRef(1);
 
-  // 👇 ここでuseEffectを使って、タイマーを作成してください
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime((time) => time + 1);
-    }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  const alertClick = () => {
+    if (clickCount.current < 10) {
+      clickCount.current += 1;
+    } else if (clickCount.current >= 10) {
+      alert("クリックしすぎです！");
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-10 w-[400px]">
-        <div className="timer text-center text-6xl font-bold text-gray-900 dark:text-gray-100">
-          {secondsToMs(time)}
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center h-screen space-y-4 bg-gray-100 rounded-sm my-4 mx-4">
+      <button
+        className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 bg-pink-500 hover:bg-pink-600 text-white rounded-md px-4 py-2 transition-colors duration-200"
+        onClick={alertClick}
+      >
+        クリックしてね！
+      </button>
     </div>
   );
 }
 
-export const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+createRoot(document.getElementById("root")).render(<App />);
